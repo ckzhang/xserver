@@ -43,6 +43,15 @@ typedef struct {
 #endif
 } drmmode_bo;
 
+struct real_mode {
+	int hsync_start;
+	int vsync_start;
+	int hdisplay;
+	int vdisplay;
+	float h_ratio;
+	float v_ratio;
+};
+
 typedef struct {
     int fd;
     unsigned fb_id;
@@ -94,9 +103,15 @@ typedef struct {
 typedef struct {
     drmmode_ptr drmmode;
     drmModeCrtcPtr mode_crtc;
+	Bool is_mirror;
+	int master_w;
+	int master_h;
+	struct real_mode* mode_index;
+    int index;
     uint32_t vblank_pipe;
     int dpms_mode;
     struct dumb_bo *cursor_bo;
+    unsigned primary_plane_id;
     Bool cursor_up;
     uint16_t lut_r[256], lut_g[256], lut_b[256];
     DamagePtr slave_damage;
@@ -138,6 +153,8 @@ typedef struct {
     drmmode_prop_ptr props;
     int enc_mask;
     int enc_clone_mask;
+	struct real_mode r_mode[32];
+	int r_mode_index;
 } drmmode_output_private_rec, *drmmode_output_private_ptr;
 
 typedef struct _msPixmapPriv {
